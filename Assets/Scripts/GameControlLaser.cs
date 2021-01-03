@@ -31,23 +31,11 @@ public class GameControlLaser : MonoBehaviour
             timer = GenerateSpawnTime();
             GenerateAsteroid();
         }
-
-        Vector2 s = mainCamera.transform.position;
-        Vector2 e = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-
-        if (Intersection(s, e, cameraVisibility, out float t))
-		{
-			Debug.DrawLine(s, s + (e - s) * t, Color.green);
-		}
-		else
-		{
-            Debug.DrawLine(s, e, Color.red);
-        }
 	}
 
     float GenerateSpawnTime()
 	{
-        return Random.Range(0.67f, 1.2f);
+        return Random.Range(0.8f, 1.35f);
 	}
 
     public static bool Intersection(Vector2 s, Vector2 e, Rect r, out float t)
@@ -161,16 +149,14 @@ public class GameControlLaser : MonoBehaviour
         Vector2 dir = FromUnitPolar(Random.value * 2f * Mathf.PI);
         Vector2 start = mainCamera.transform.position;
         float t = IntersectionRay(start, dir, cameraVisibility);
-
-
-
-        Vector2 newPos = start + dir * (t + 2.5f);
+        Vector2 newPos = start + dir * (t + 3f);
         Vector2 angles = CalculatePointToRectangleDir(newPos, cameraVisibility);
-        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], newPos, Quaternion.Euler(0, 0, Random.Range(0, 360)));
+
+        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], newPos, Quaternion.identity);
         newAsteroid.SetActive(true);
         Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
         body.velocity = FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.1f, 2.1f);
-        body.angularVelocity = Random.Range(-120f, 120f);
+        body.angularVelocity = Random.Range(-180f, 180f);
         return newAsteroid;
 	}
 }
