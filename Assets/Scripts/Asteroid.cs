@@ -14,7 +14,7 @@ public class Asteroid : MonoBehaviour
         visible = false;
         float scale = Random.Range(0.8f, 1.5f);
         transform.localScale = new Vector3(scale, scale, 1f);
-        maxHp = DefaultHealth * scale * scale;
+        maxHp = DefaultHealth * scale;
         hp = maxHp;
     }
 
@@ -32,7 +32,8 @@ public class Asteroid : MonoBehaviour
         hp -= dmg;
         if (hp <= 0f)
 		{
-            GetComponent<Collider2D>().enabled = false;
+            //GetComponent<Collider2D>().enabled = false;
+            Destroy(gameObject);
 		}
         return true;
 	}
