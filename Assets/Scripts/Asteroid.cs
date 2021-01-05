@@ -5,14 +5,16 @@ using UnityEngine;
 public class Asteroid : MonoBehaviour
 {
     public const float DefaultHealth = 100f;
-    bool visible;
-    float hp, maxHp;
+    public const float DeathAnimationTime = 0.8f;
+    bool visible, dead;
+    float hp, maxHp, deathAnimTimer;
 
     // Start is called before the first frame update
     void Start()
     {
         visible = false;
-        float scale = Random.Range(0.8f, 1.5f);
+        dead = false;
+        float scale = Random.Range(0.75f, 1.25f);
         transform.localScale = new Vector3(scale, scale, 1f);
         maxHp = DefaultHealth * scale;
         hp = maxHp;
@@ -21,19 +23,28 @@ public class Asteroid : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (dead)
+		{
+            deathAnimTimer -= Time.deltaTime;
+            if (deathAnimTimer >= 0f)
+                GetComponent<SpriteRenderer>().material.SetFloat("_Fade", 1f - deathAnimTimer / DeathAnimationTime);
+            else
+                Destroy(gameObject);
+		}
     }
 
     public bool Damage(float dmg)
 	{
-        if (!visible)
+        if (!visible || dead)
             return false;
 
         hp -= dmg;
+        GetComponent<SpriteRenderer>().material.SetFloat("_Destruction", 1f - hp / maxHp);
         if (hp <= 0f)
 		{
-            //GetComponent<Collider2D>().enabled = false;
-            Destroy(gameObject);
+            dead = true;
+            GetComponent<Collider2D>().enabled = false;
+            deathAnimTimer = DeathAnimationTime;
 		}
         return true;
 	}
@@ -46,7 +57,7 @@ public class Asteroid : MonoBehaviour
 
 	void OnTriggerExit2D(Collider2D collision)
 	{
-        if (collision.gameObject.tag == "MainCamera")
+        if (collision.gameObject.tag == "MainCamera" && !dead)
             Destroy(gameObject);
 	}
 }
