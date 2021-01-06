@@ -153,7 +153,6 @@ public class GameControlLaser : MonoBehaviour
         Vector2 angles = CalculatePointToRectangleDir(newPos, cameraVisibility);
 
         GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], newPos, Quaternion.identity);
-        newAsteroid.SetActive(true);
         Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
         body.velocity = FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.2f, 2.0f);
         body.angularVelocity = Random.Range(-150f, 150f);

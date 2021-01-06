@@ -9,14 +9,17 @@ public class Ship : MonoBehaviour
     const float ForceStrength = 0.65f;
     const float RaycastDist = 16f;
     public Camera mainCamera;
-    GameObject laser;
+    Transform laserTransform;
     float rotation;
     // Start is called before the first frame update
     void Start()
     {
         rotation = GetTargetRotation();
-        laser = transform.GetChild(0).gameObject;
-        laser.transform.localScale = new Vector3(1f, RaycastDist, 1f);
+        laserTransform = transform.GetChild(0);
+
+        Vector3 laserScale = laserTransform.localScale;
+        laserScale.y = RaycastDist;
+        laserTransform.localScale = laserScale;
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class Ship : MonoBehaviour
 	void FixedUpdate()
 	{
         RaycastHit2D hit = Physics2D.Raycast(Vector2.zero, GameControlLaser.FromUnitPolar((rotation + 90f) * Mathf.Deg2Rad), RaycastDist);
+        Vector3 laserScale = laserTransform.localScale;
         if (hit.collider)
         {
             Asteroid hitAsteroid = hit.collider.gameObject.GetComponent<Asteroid>();
@@ -37,14 +41,16 @@ public class Ship : MonoBehaviour
             {
                 if (hitAsteroid.Damage(Damage))
 				{
-                    laser.transform.localScale = new Vector3(1f, Vector2.Distance(hit.point, laser.transform.position), 1f);
+                    laserScale.y = Vector2.Distance(hit.point, laserTransform.position) + 0.1f;
+                    laserTransform.localScale = laserScale;
                     hit.rigidbody.AddForce(ForceStrength * (hit.point - (Vector2)transform.position).normalized);
 				}
             }
         }
         else
 		{
-            laser.transform.localScale = new Vector3(1f, RaycastDist, 1f);
+            laserScale.y = RaycastDist;
+            laserTransform.localScale = laserScale;
         }
     }
 
