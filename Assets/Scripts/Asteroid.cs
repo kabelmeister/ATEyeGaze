@@ -16,7 +16,7 @@ public class Asteroid : MonoBehaviour
     {
         visible = false;
         dead = false;
-        float scale = Random.Range(0.75f, 1.25f);
+        float scale = Random.Range(0.75f, 1.35f);
         transform.localScale = new Vector3(scale, scale, 1f);
         maxHp = baseHealth * scale * scale;
         hp = maxHp;
@@ -35,7 +35,14 @@ public class Asteroid : MonoBehaviour
 		}
     }
 
-    public bool Damage(float dmg)
+	void FixedUpdate()
+	{
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (Vector2.Dot(rb.velocity, rb.position) > 0f && rb.position.sqrMagnitude > Ship.RaycastDist * Ship.RaycastDist)
+            Destroy(gameObject);
+	}
+
+	public bool Damage(float dmg)
 	{
         if (!visible || dead)
             return false;

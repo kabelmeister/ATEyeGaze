@@ -35,7 +35,7 @@ public class GameControlLaser : MonoBehaviour
 
     float GenerateSpawnTime()
 	{
-        return Random.Range(0.7f, 1.3f);
+        return Random.Range(0.75f, 1.25f);
 	}
 
     public static bool Intersection(Vector2 s, Vector2 e, Rect r, out float t)
@@ -154,7 +154,7 @@ public class GameControlLaser : MonoBehaviour
 
         GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], new Vector3(newPos.x, newPos.y, -1f), Quaternion.identity);
         Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
-        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.3f, 2.9f), ForceMode2D.Impulse);
+        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.3f, 3f), ForceMode2D.Impulse);
         body.angularVelocity = Random.Range(-150f, 150f);
         return newAsteroid;
 	}

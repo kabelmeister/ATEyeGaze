@@ -7,7 +7,7 @@ public class Ship : MonoBehaviour
     public float damage = 90f;
     public float turnRate = 240f;
     public float pushForce = 34f;
-    const float RaycastDist = 16f;
+    public const float RaycastDist = 18f;
 
     public Camera mainCamera;
     Transform laserTransform;
