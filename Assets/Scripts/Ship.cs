@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class Ship : MonoBehaviour
 {
-    const float Damage = 90f / 50f;
-    const float TurnRate = 240f;
-    const float ForceStrength = 0.65f;
+    public float damage = 90f;
+    public float turnRate = 240f;
+    public float pushForce = 34f;
     const float RaycastDist = 16f;
+
     public Camera mainCamera;
     Transform laserTransform;
     float rotation;
+    float targetRotation;
+
+    public ParticleSystem hitParticles;
+    public AudioSource fireSound;
+    public AudioSource hitSound;
     // Start is called before the first frame update
     void Start()
     {
@@ -25,13 +31,13 @@ public class Ship : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float targetRotation = GetTargetRotation();
-        rotation = Mathf.MoveTowardsAngle(rotation, targetRotation, TurnRate * Time.deltaTime);
-        transform.rotation = Quaternion.Euler(0, 0, rotation);
+        targetRotation = GetTargetRotation();
     }
 
 	void FixedUpdate()
 	{
+        rotation = Mathf.MoveTowardsAngle(rotation, targetRotation, turnRate * Time.fixedDeltaTime);
+        transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
         RaycastHit2D hit = Physics2D.Raycast(Vector2.zero, GameControlLaser.FromUnitPolar((rotation + 90f) * Mathf.Deg2Rad), RaycastDist);
         Vector3 laserScale = laserTransform.localScale;
         if (hit.collider)
@@ -39,18 +45,31 @@ public class Ship : MonoBehaviour
             Asteroid hitAsteroid = hit.collider.gameObject.GetComponent<Asteroid>();
             if (hitAsteroid)
             {
-                if (hitAsteroid.Damage(Damage))
+                if (hitAsteroid.Damage(damage * Time.fixedDeltaTime))
 				{
+                    hitParticles.transform.position = hit.point;
+                    hitParticles.transform.rotation = Quaternion.LookRotation(Vector3.forward, hit.normal);
+                    if (!hitParticles.isPlaying)
+                        hitParticles.Play();
+
+                    hitSound.transform.position = hit.point;
+                    if (!hitSound.isPlaying)
+                        hitSound.Play();
+
                     laserScale.y = Vector2.Distance(hit.point, laserTransform.position) + 0.1f;
                     laserTransform.localScale = laserScale;
-                    hit.rigidbody.AddForce(ForceStrength * (hit.point - (Vector2)transform.position).normalized);
-				}
+                    hit.rigidbody.AddForce(pushForce * Time.fixedDeltaTime * (hit.point - (Vector2)transform.position).normalized);
+                }
             }
         }
         else
 		{
             laserScale.y = RaycastDist;
             laserTransform.localScale = laserScale;
+            if (hitParticles.isPlaying)
+                hitParticles.Stop();
+            if (hitSound.isPlaying)
+                hitSound.Pause();
         }
     }
 

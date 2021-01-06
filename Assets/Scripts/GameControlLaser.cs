@@ -11,7 +11,7 @@ public class GameControlLaser : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        timer = GenerateSpawnTime();
+        timer = 0f;
 
         Vector2 camSize = new Vector2();
         camSize.y = mainCamera.orthographicSize;
@@ -35,7 +35,7 @@ public class GameControlLaser : MonoBehaviour
 
     float GenerateSpawnTime()
 	{
-        return Random.Range(0.8f, 1.35f);
+        return Random.Range(0.7f, 1.3f);
 	}
 
     public static bool Intersection(Vector2 s, Vector2 e, Rect r, out float t)
@@ -149,12 +149,12 @@ public class GameControlLaser : MonoBehaviour
         Vector2 dir = FromUnitPolar(Random.value * 2f * Mathf.PI);
         Vector2 start = mainCamera.transform.position;
         float t = IntersectionRay(start, dir, cameraVisibility);
-        Vector2 newPos = start + dir * (t + 3f);
+        Vector2 newPos = start + dir * (t + 1.5f);
         Vector2 angles = CalculatePointToRectangleDir(newPos, cameraVisibility);
 
-        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], newPos, Quaternion.identity);
+        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], new Vector3(newPos.x, newPos.y, -1f), Quaternion.identity);
         Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
-        body.velocity = FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.2f, 2.0f);
+        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.3f, 2.9f), ForceMode2D.Impulse);
         body.angularVelocity = Random.Range(-150f, 150f);
         return newAsteroid;
 	}
