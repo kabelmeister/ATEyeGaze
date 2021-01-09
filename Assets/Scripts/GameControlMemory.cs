@@ -22,7 +22,7 @@ public class GameControlMemory : MonoBehaviour
 
     private bool firstGuess, secondGuess;
     private int cntGuesses, cntCorrectGuesses, gameGuesses;
-    private int firstGuessIndex, secondGuessIndex;
+    private int firstGuessIndex, secondGuessIndex, chosenCardIndex = -1;
     private string firstGuessPuzzle, secondGuessPuzzle;
 
     void Awake()
@@ -85,6 +85,11 @@ public class GameControlMemory : MonoBehaviour
         hoverTimer = 0.0f;
         //isHovering = false;
 
+        if (chosenCardIndex != int.Parse(buttonName))
+            chosenCardIndex = int.Parse(buttonName);
+        else
+            return;
+
         if (!firstGuess)
         {
             firstGuess = true;
@@ -145,6 +150,7 @@ public class GameControlMemory : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
         firstGuess = secondGuess = false;
+        chosenCardIndex = -1;
 
     }
 
