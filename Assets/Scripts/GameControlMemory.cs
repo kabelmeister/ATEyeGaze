@@ -10,16 +10,33 @@ public class GameControlMemory : MonoBehaviour
 
     public List<Button> btns = new List<Button>();
 
-    private bool isHovering = false;
+    //private bool isHovering = false;
     public const float hoverTime = 1.5f;
     float hoverTimer = 0.0f;
 
     Ray ray;
     RaycastHit2D hit;
 
+    public Sprite[] puzzles;
+    public List<Sprite> gamePuzzles = new List<Sprite>();
+
+    private bool firstGuess, secondGuess;
+    private int cntGuesses, cntCorrectGuesses, gameGuesses;
+    private int firstGuessIndex, secondGuessIndex;
+    private string firstGuessPuzzle, secondGuessPuzzle;
+
+    void Awake()
+    {
+        puzzles = Resources.LoadAll<Sprite>("foodImages");
+    }
+
     void Start()
     {
         GetButtons();
+        AddGamePuzzles();
+        Shuffle(gamePuzzles);
+        gameGuesses = gamePuzzles.Count / 2;
+        cntGuesses = 0;
     }
 
     void GetButtons()
@@ -40,44 +57,115 @@ public class GameControlMemory : MonoBehaviour
         }
     }
 
+    void AddGamePuzzles()
+    {
+        int looper = btns.Count;
+        int index = 0;
+
+        for (int i = 0; i < looper; i++)
+        {
+            if (index == looper / 2)
+            {
+                index = 0;
+            }
+
+            gamePuzzles.Add(puzzles[index]);
+            index++;
+        }
+    }
+
     private void PickAPuzzle()
     {
         hoverTimer = 0.0f;
-        isHovering = true;
+        //isHovering = true;
     }
 
     public void PuzzleChosen(string buttonName)
     {
         hoverTimer = 0.0f;
-        isHovering = false;
+        //isHovering = false;
 
-        Debug.Log("btn: " + buttonName);
+        if (!firstGuess)
+        {
+            firstGuess = true;
+            firstGuessIndex = int.Parse(buttonName);
+            btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
 
+            firstGuessPuzzle = gamePuzzles[firstGuessIndex].name;
+        }
+        else if (!secondGuess)
+        {
+            secondGuess = true;
+            secondGuessIndex = int.Parse(buttonName);
+            btns[secondGuessIndex].image.sprite = gamePuzzles[secondGuessIndex];
+
+            secondGuessPuzzle = gamePuzzles[secondGuessIndex].name;
+
+            cntGuesses++;
+            StartCoroutine(CheckIfPuzzlesMatch());
+        }
     }
-
-    /*public void onHover(Ray ray, RaycastHit2D hit)
-    {
-        hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-        if (hit.collider == null)
-        {
-            Debug.Log("nothing hit");
-
-        }
-        else
-        {
-            print(hit.collider.name);
-        }
-    }*/
 
     private void Update()
     {
         hoverTimer += Time.deltaTime;
-        if (hoverTimer >= hoverTime && isHovering)
+        if (hoverTimer >= hoverTime)// && isHovering)
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
             
-            PuzzleChosen(hit.collider.name);
+            if (hit)
+            {
+                PuzzleChosen(hit.collider.name);
+            }
+        }
+    }
+
+    IEnumerator CheckIfPuzzlesMatch()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (firstGuessPuzzle == secondGuessPuzzle)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            btns[firstGuessIndex].interactable = false;
+            btns[secondGuessIndex].interactable = false;
+
+            btns[firstGuessIndex].image.color = new Color(0, 0, 0, 0);
+            btns[secondGuessIndex].image.color = new Color(0, 0, 0, 0);
+
+            CheckIfGameIsFinished();
+        }
+        else
+        {
+            btns[firstGuessIndex].image.sprite = bgImage;
+            btns[secondGuessIndex].image.sprite = bgImage;
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        firstGuess = secondGuess = false;
+
+    }
+
+    void CheckIfGameIsFinished()
+    {
+        cntCorrectGuesses++;
+
+        if (cntCorrectGuesses == gameGuesses)
+        {
+            Debug.Log("game over " + cntGuesses);
+        }
+    }
+
+    void Shuffle(List<Sprite> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            Sprite tmp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = tmp;
         }
     }
 
