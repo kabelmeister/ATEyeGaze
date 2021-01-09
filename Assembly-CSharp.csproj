@@ -68,6 +68,7 @@
     <Compile Include="Assets\Scripts\Asteroid.cs" />
     <Compile Include="Assets\Scripts\GameControlLaser.cs" />
     <Compile Include="Assets\Scripts\GameControlMemory.cs" />
+    <Compile Include="Assets\Scripts\MemoryStartScreen.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
     <Compile Include="Assets\Shapes2D\Scripts\PolyMap.cs" />
     <Compile Include="Assets\Shapes2D\Scripts\Shape.cs" />
