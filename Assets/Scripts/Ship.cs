@@ -14,9 +14,11 @@ public class Ship : MonoBehaviour
     float rotation;
     float targetRotation;
 
-    public ParticleSystem hitParticles;
     public AudioSource fireSound;
     public AudioSource hitSound;
+    public ParticleSystem hitParticles;
+    public ParticleSystem explodeEffectPrefab;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -49,8 +51,7 @@ public class Ship : MonoBehaviour
 				{
                     hitParticles.transform.position = hit.point;
                     hitParticles.transform.rotation = Quaternion.LookRotation(Vector3.forward, hit.normal);
-                    if (!hitParticles.isPlaying)
-                        hitParticles.Play();
+                    hitParticles.Play();
 
                     hitSound.transform.position = hit.point;
                     if (!hitSound.isPlaying)
@@ -66,10 +67,8 @@ public class Ship : MonoBehaviour
 		{
             laserScale.y = RaycastDist;
             laserTransform.localScale = laserScale;
-            if (hitParticles.isPlaying)
-                hitParticles.Stop();
-            if (hitSound.isPlaying)
-                hitSound.Pause();
+            hitParticles.Stop();
+            hitSound.Pause();
         }
     }
 
@@ -79,4 +78,14 @@ public class Ship : MonoBehaviour
         Vector2 shipToMouse = mousePos - (Vector2)transform.position;
         return Mathf.Atan2(shipToMouse.y, shipToMouse.x) * Mathf.Rad2Deg - 90f;
     }
+
+	void OnCollisionEnter2D(Collision2D collision)
+	{
+        GameObject collidee = collision.gameObject;
+        if (collidee.tag == "Asteroid")
+		{
+            GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;
+            Destroy(particles, 4f);
+		}
+	}
 }

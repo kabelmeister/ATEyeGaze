@@ -35,7 +35,7 @@ public class GameControlLaser : MonoBehaviour
 
     float GenerateSpawnTime()
 	{
-        return Random.Range(0.75f, 1.25f);
+        return Random.Range(0.68f, 1.2f);
 	}
 
     public static bool Intersection(Vector2 s, Vector2 e, Rect r, out float t)
