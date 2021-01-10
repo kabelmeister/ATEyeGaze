@@ -9,6 +9,8 @@ public class Asteroid : MonoBehaviour
     bool visible, dead;
     float hp, maxHp, deathAnimTimer;
 
+    public float MaxHP { get => maxHp; }
+
     public AudioSource disintegrateSound;
 
     // Start is called before the first frame update
@@ -52,6 +54,7 @@ public class Asteroid : MonoBehaviour
         if (hp <= 0f)
 		{
             dead = true;
+            GameControlLaser.DestroyedAsteroid(this);
             disintegrateSound.Play();
             GetComponent<Collider2D>().enabled = false;
             deathAnimTimer = deathAnimationTime;

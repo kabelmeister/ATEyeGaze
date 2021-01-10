@@ -40,7 +40,7 @@ public class Ship : MonoBehaviour
 	{
         rotation = Mathf.MoveTowardsAngle(rotation, targetRotation, turnRate * Time.fixedDeltaTime);
         transform.localRotation = Quaternion.Euler(0f, 0f, rotation);
-        RaycastHit2D hit = Physics2D.Raycast(Vector2.zero, GameControlLaser.FromUnitPolar((rotation + 90f) * Mathf.Deg2Rad), RaycastDist);
+        RaycastHit2D hit = Physics2D.Raycast(laserTransform.position, laserTransform.up, RaycastDist);
         Vector3 laserScale = laserTransform.localScale;
         if (hit.collider)
         {
@@ -84,8 +84,17 @@ public class Ship : MonoBehaviour
         GameObject collidee = collision.gameObject;
         if (collidee.tag == "Asteroid")
 		{
-            GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;
+            GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;            
+            Destroy(gameObject, 0.15f);
             Destroy(particles, 4f);
 		}
 	}
+
+	void OnDestroy()
+	{
+        if (hitParticles != null)
+            hitParticles.Stop();
+        if (hitSound != null)
+            hitSound.Stop();
+    }
 }

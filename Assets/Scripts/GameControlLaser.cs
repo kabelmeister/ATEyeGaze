@@ -1,16 +1,31 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class GameControlLaser : MonoBehaviour
 {
     public Camera mainCamera;
+    public Text scoreText;
     public GameObject[] asteroids;
 
+    int score = 0;
     float timer;
     Rect cameraVisibility;
+
+    static GameControlLaser instance;
+
+    public static void DestroyedAsteroid(Asteroid ast)
+	{
+        if (instance != null)
+		{
+            instance.score += Mathf.RoundToInt(ast.MaxHP);
+            instance.scoreText.text = instance.score.ToString();
+		}
+	}
 
     // Start is called before the first frame update
     void Start()
     {
+        instance = this;
         timer = 0f;
 
         Vector2 camSize = new Vector2();
