@@ -1,5 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameControlLaser : MonoBehaviour
 {
@@ -7,12 +9,14 @@ public class GameControlLaser : MonoBehaviour
     public Text scoreText;
     public Text pauseStatusText;
     public Text pauseLabelText;
+    public GameObject gameOverScreen;
     public GameObject[] asteroids;
 
     int score = 0;
     float timer;
     Rect cameraVisibility;
     bool paused;
+    bool playerDied;
 
     static GameControlLaser instance;
 
@@ -25,10 +29,19 @@ public class GameControlLaser : MonoBehaviour
 		}
 	}
 
+    public static void PlayerDied()
+	{
+        if (instance != null)
+		{
+            instance.StartCoroutine(instance.GameOver());
+		}
+	}
+
     // Start is called before the first frame update
     void Start()
     {
         instance = this;
+        playerDied = false;
         timer = 0f;
 
         Vector2 camSize = new Vector2();
@@ -44,7 +57,7 @@ public class GameControlLaser : MonoBehaviour
     void Update()
     {
         timer -= Time.deltaTime;
-        if (timer <= 0f)
+        if (timer <= 0f && !playerDied)
 		{
             timer = GenerateSpawnTime();
             GenerateAsteroid();
@@ -161,6 +174,25 @@ public class GameControlLaser : MonoBehaviour
 		}
         return new Vector2(minAngle, maxAngle);
     }
+
+    IEnumerator GameOver()
+	{
+        yield return new WaitForSecondsRealtime(3f);
+        Configuration.HighScore = Mathf.Max(score, Configuration.HighScore);
+
+        Transform gosTransform = gameOverScreen.transform;
+        gosTransform.GetChild(1).GetComponent<Text>().text = "Your score: " + score;
+        gosTransform.GetChild(2).GetComponent<Text>().text = "High score: " + Configuration.HighScore;
+        gameOverScreen.SetActive(true);
+	}
+
+    public void GameOverButtons(int buttonCode)
+	{
+        if (buttonCode == 0)
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        else
+            SceneManager.LoadScene(0);
+	}
 
 	public void Pause()
 	{

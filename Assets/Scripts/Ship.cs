@@ -13,6 +13,7 @@ public class Ship : MonoBehaviour
     Transform laserTransform;
     float rotation;
     float targetRotation;
+    bool dead;
 
     public AudioSource fireSound;
     public AudioSource hitSound;
@@ -22,6 +23,7 @@ public class Ship : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dead = false;
         rotation = GetTargetRotation();
         laserTransform = transform.GetChild(0);
 
@@ -82,11 +84,13 @@ public class Ship : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D collision)
 	{
         GameObject collidee = collision.gameObject;
-        if (collidee.tag == "Asteroid")
+        if (!dead && collidee.tag == "Asteroid")
 		{
-            GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;            
+            dead = true;
+            GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;         
             Destroy(gameObject, 0.15f);
             Destroy(particles, 4f);
+            GameControlLaser.PlayerDied();
 		}
 	}
 

@@ -5,9 +5,15 @@ using UnityEngine.EventSystems;
 public class MouseOverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
 	float timer;
+	float enabledTime;
 	bool mouseInside;
 
 	public UnityEvent onHoverActivate;
+
+	void OnEnable()
+	{
+		enabledTime = Time.unscaledTime;
+	}
 
 	void Update()
 	{
@@ -16,7 +22,6 @@ public class MouseOverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 		{
 			onHoverActivate.Invoke();
 			mouseInside = false;
-			Debug.Log("Activate!");
 		}
 	}
 
@@ -29,12 +34,14 @@ public class MouseOverUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 	public void OnPointerExit(PointerEventData eventData)
 	{
 		mouseInside = false;
-		Debug.Log("Reset!");
 	}
 
 	public void OnPointerEnter(PointerEventData eventData)
 	{
-		mouseInside = true;
-		timer = Configuration.MouseHoverTime;
+		if (Time.unscaledTime - enabledTime > 0.125f)
+		{
+			mouseInside = true;
+			timer = Configuration.MouseHoverTime;
+		}
 	}
 }
