@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class GameControlMemory : MonoBehaviour
 {
@@ -121,7 +122,14 @@ public class GameControlMemory : MonoBehaviour
             
             if (hit)
             {
-                PuzzleChosen(hit.collider.name);
+                if (hit.collider.name == "GoBackButton")
+                {
+                    SceneManager.LoadScene("MemoryStartScreen");
+                }
+                else
+                {
+                    PuzzleChosen(hit.collider.name);
+                }
             }
         }
     }

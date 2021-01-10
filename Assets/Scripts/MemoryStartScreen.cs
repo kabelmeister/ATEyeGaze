@@ -48,9 +48,15 @@ public class MemoryStartScreen : MonoBehaviour
         hoverTimer = 0.0f;
         //isHovering = false;
 
-        //Debug.Log(buttonName[3]);
-
-        SceneManager.LoadScene("MemoryLvl" + buttonName[3]);
+        
+        if (hit.collider.name == "GoBackButton")
+        {
+            SceneManager.LoadScene("Menu");
+        }
+        else
+        {
+            SceneManager.LoadScene("MemoryLvl" + buttonName[3]);
+        }
     }
 
     private void Update()
