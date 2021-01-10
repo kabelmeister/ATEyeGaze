@@ -70,7 +70,7 @@ Material:
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
     - _ColorMode: 0
-    - _ColorMult: 1
+    - _ColorMult: 3
     - _Cull: 2
     - _Cutoff: 0.5
     - _DistortionBlend: 0.5

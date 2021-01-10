@@ -5,7 +5,7 @@ using UnityEngine;
 public static class Configuration
 {
 	const string ConfigName = "config.dat";
-	static float hoverTime;
+	static float hoverTime = 0.5f;
 	static int highScore;
 
 	public static int HighScore { get => highScore; set => highScore = value; }

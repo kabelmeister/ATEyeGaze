@@ -5,11 +5,14 @@ public class GameControlLaser : MonoBehaviour
 {
     public Camera mainCamera;
     public Text scoreText;
+    public Text pauseStatusText;
+    public Text pauseLabelText;
     public GameObject[] asteroids;
 
     int score = 0;
     float timer;
     Rect cameraVisibility;
+    bool paused;
 
     static GameControlLaser instance;
 
@@ -159,7 +162,26 @@ public class GameControlLaser : MonoBehaviour
         return new Vector2(minAngle, maxAngle);
     }
 
-    GameObject GenerateAsteroid()
+	public void Pause()
+	{
+        paused = !paused;
+        if (paused)
+		{
+            Time.timeScale = 0f;
+            AudioListener.pause = true;
+            pauseStatusText.enabled = true;
+            pauseLabelText.text = "Unpause";
+		}
+        else
+		{
+            Time.timeScale = 1f;
+            AudioListener.pause = false;
+            pauseStatusText.enabled = false;
+            pauseLabelText.text = "Pause";
+        }
+	}
+
+	GameObject GenerateAsteroid()
 	{
         Vector2 dir = FromUnitPolar(Random.value * 2f * Mathf.PI);
         Vector2 start = mainCamera.transform.position;
