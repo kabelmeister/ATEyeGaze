@@ -23,7 +23,7 @@ Material:
   m_Name: HitParticle
   m_Shader: {fileID: -6465566751694194690, guid: 7354ae21888686a44a5ec5375e51c100,
     type: 3}
-  m_ShaderKeywords: _EMISSION
+  m_ShaderKeywords: ETC1_EXTERNAL_ALPHA _EMISSION
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0

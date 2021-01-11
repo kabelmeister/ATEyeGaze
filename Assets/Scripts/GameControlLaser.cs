@@ -177,6 +177,8 @@ public class GameControlLaser : MonoBehaviour
 
     IEnumerator GameOver()
 	{
+        playerDied = true;
+        pauseLabelText.transform.parent.gameObject.SetActive(false);
         yield return new WaitForSecondsRealtime(3f);
         Configuration.HighScore = Mathf.Max(score, Configuration.HighScore);
 
@@ -223,7 +225,7 @@ public class GameControlLaser : MonoBehaviour
 
         GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], new Vector3(newPos.x, newPos.y, -1f), Quaternion.identity);
         Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
-        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.3f, 3f), ForceMode2D.Impulse);
+        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.6f, 2.8f), ForceMode2D.Impulse);
         body.angularVelocity = Random.Range(-150f, 150f);
         return newAsteroid;
 	}

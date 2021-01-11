@@ -18,7 +18,7 @@ public class Asteroid : MonoBehaviour
     {
         visible = false;
         dead = false;
-        float scale = Random.Range(0.75f, 1.35f);
+        float scale = Random.Range(0.75f, 1.32f);
         transform.localScale = new Vector3(scale, scale, 1f);
         maxHp = baseHealth * scale * scale;
         hp = maxHp;
