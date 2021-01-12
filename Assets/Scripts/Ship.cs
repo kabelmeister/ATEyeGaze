@@ -51,15 +51,14 @@ public class Ship : MonoBehaviour
             {
                 if (hitAsteroid.Damage(damage * Time.fixedDeltaTime))
 				{
-                    hitParticles.transform.position = hit.point;
-                    hitParticles.transform.rotation = Quaternion.LookRotation(Vector3.forward, hit.normal);
+                    Vector3 particleLocation = new Vector3(hit.point.x, hit.point.y, hitParticles.transform.position.z);
+                    hitParticles.transform.SetPositionAndRotation(particleLocation, Quaternion.LookRotation(Vector3.forward, hit.normal));
                     hitParticles.Play();
 
-                    hitSound.transform.position = hit.point;
                     if (!hitSound.isPlaying)
                         hitSound.Play();
 
-                    laserScale.y = Vector2.Distance(hit.point, laserTransform.position) + 0.1f;
+                    laserScale.y = Vector2.Distance(hit.point, laserTransform.position) + 0.08f;
                     laserTransform.localScale = laserScale;
                     hit.rigidbody.AddForce(pushForce * Time.fixedDeltaTime * (hit.point - (Vector2)transform.position).normalized);
                 }
