@@ -7,8 +7,6 @@ using UnityEngine.UI;
 
 public class MemoryStartScreen : MonoBehaviour
 {
-    private List<Button> lvlBtns = new List<Button>();
-
     public const float hoverTime = 1.5f;
     float hoverTimer = 0.0f;
 
@@ -19,14 +17,18 @@ public class MemoryStartScreen : MonoBehaviour
     void Start()
     {
         ButtonsSetUp();
+
+        GameObject.FindGameObjectWithTag("Music").GetComponent<MemoryMusic>().PlayMusic();
     }
 
     void ButtonsSetUp()
     {
         GameObject[] objects = GameObject.FindGameObjectsWithTag("LvlTag");
 
-        EventTrigger.Entry eventtype = new EventTrigger.Entry();
-        eventtype.eventID = EventTriggerType.PointerEnter;
+        EventTrigger.Entry eventtype = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
         eventtype.callback.AddListener((eventData) => { PickALevel(); });
 
         for (int i = 0; i < objects.Length; i++)

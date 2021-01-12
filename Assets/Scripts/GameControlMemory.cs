@@ -26,6 +26,8 @@ public class GameControlMemory : MonoBehaviour
     private int firstGuessIndex, secondGuessIndex, chosenCardIndex = -1;
     private string firstGuessPuzzle, secondGuessPuzzle;
 
+    public GameObject endPanel;
+
     void Awake()
     {
         puzzles = Resources.LoadAll<Sprite>("foodImages");
@@ -44,8 +46,10 @@ public class GameControlMemory : MonoBehaviour
     {
         GameObject[] objects = GameObject.FindGameObjectsWithTag("PuzzleButton");
 
-        EventTrigger.Entry eventtype = new EventTrigger.Entry();
-        eventtype.eventID = EventTriggerType.PointerEnter;
+        EventTrigger.Entry eventtype = new EventTrigger.Entry
+        {
+            eventID = EventTriggerType.PointerEnter
+        };
         eventtype.callback.AddListener((eventData) => { PickAPuzzle(); });
 
         for (int i = 0; i < objects.Length; i++)
@@ -90,11 +94,12 @@ public class GameControlMemory : MonoBehaviour
             chosenCardIndex = int.Parse(buttonName);
         else
             return;
-
+        
         if (!firstGuess)
         {
             firstGuess = true;
             firstGuessIndex = int.Parse(buttonName);
+
             btns[firstGuessIndex].image.sprite = gamePuzzles[firstGuessIndex];
 
             firstGuessPuzzle = gamePuzzles[firstGuessIndex].name;
@@ -145,6 +150,9 @@ public class GameControlMemory : MonoBehaviour
             btns[firstGuessIndex].interactable = false;
             btns[secondGuessIndex].interactable = false;
 
+            btns[firstGuessIndex].GetComponent<BoxCollider2D>().enabled = false;
+            btns[secondGuessIndex].GetComponent<BoxCollider2D>().enabled = false;
+
             btns[firstGuessIndex].image.color = new Color(0, 0, 0, 0);
             btns[secondGuessIndex].image.color = new Color(0, 0, 0, 0);
 
@@ -169,6 +177,13 @@ public class GameControlMemory : MonoBehaviour
         if (cntCorrectGuesses == gameGuesses)
         {
             Debug.Log("game over " + cntGuesses);
+
+            GameObject panel = new GameObject("Panel");
+            panel.AddComponent<CanvasRenderer>();
+            Image i = panel.AddComponent<Image>();
+            i.color = Color.red;
+
+            //SceneManager.LoadScene("MemoryStartScreen");
         }
     }
 

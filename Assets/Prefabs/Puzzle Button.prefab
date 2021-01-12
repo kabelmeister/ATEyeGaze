@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2623043064725215980}
   - component: {fileID: 6129335244558962611}
   - component: {fileID: -4676062557799480073}
+  - component: {fileID: 5429914344250580280}
   m_Layer: 5
   m_Name: Puzzle Button
   m_TagString: PuzzleButton
@@ -143,5 +144,20 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 150, y: 150}
+  m_Size: {x: 200, y: 200}
   m_EdgeRadius: 0
+--- !u!111 &5429914344250580280
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263248993711831124}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_CullingType: 0

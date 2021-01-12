@@ -15,8 +15,6 @@ public class AddButtons : MonoBehaviour
     {
         string sceneName = SceneManager.GetActiveScene().name;
 
-        Debug.Log(sceneName[sceneName.Length - 1]);
-
         if (sceneName[sceneName.Length - 1] == '1')
         {
             btn_cnt = 8;
