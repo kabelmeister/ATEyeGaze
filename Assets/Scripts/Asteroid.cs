@@ -4,19 +4,23 @@ using UnityEngine;
 
 public class Asteroid : MonoBehaviour
 {
-    public const float DefaultHealth = 100f;
-    public const float DeathAnimationTime = 0.8f;
+    public float baseHealth = 100f;
+    public float deathAnimationTime = 1f;
     bool visible, dead;
     float hp, maxHp, deathAnimTimer;
+
+    public float MaxHP { get => maxHp; }
+
+    public AudioSource disintegrateSound;
 
     // Start is called before the first frame update
     void Start()
     {
         visible = false;
         dead = false;
-        float scale = Random.Range(0.75f, 1.25f);
+        float scale = Random.Range(0.75f, 1.32f);
         transform.localScale = new Vector3(scale, scale, 1f);
-        maxHp = DefaultHealth * scale;
+        maxHp = baseHealth * scale * scale;
         hp = maxHp;
     }
 
@@ -27,13 +31,20 @@ public class Asteroid : MonoBehaviour
 		{
             deathAnimTimer -= Time.deltaTime;
             if (deathAnimTimer >= 0f)
-                GetComponent<SpriteRenderer>().material.SetFloat("_Fade", 1f - deathAnimTimer / DeathAnimationTime);
-            else
+                GetComponent<SpriteRenderer>().material.SetFloat("_Fade", 1f - deathAnimTimer / deathAnimationTime);
+            else if (!disintegrateSound.isPlaying)
                 Destroy(gameObject);
 		}
     }
 
-    public bool Damage(float dmg)
+	void FixedUpdate()
+	{
+        Rigidbody2D rb = GetComponent<Rigidbody2D>();
+        if (Vector2.Dot(rb.velocity, rb.position) > 0f && rb.position.sqrMagnitude > Ship.RaycastDist * Ship.RaycastDist)
+            Destroy(gameObject);
+	}
+
+	public bool Damage(float dmg)
 	{
         if (!visible || dead)
             return false;
@@ -43,8 +54,10 @@ public class Asteroid : MonoBehaviour
         if (hp <= 0f)
 		{
             dead = true;
+            GameControlLaser.DestroyedAsteroid(this);
+            disintegrateSound.Play();
             GetComponent<Collider2D>().enabled = false;
-            deathAnimTimer = DeathAnimationTime;
+            deathAnimTimer = deathAnimationTime;
 		}
         return true;
 	}
@@ -57,7 +70,7 @@ public class Asteroid : MonoBehaviour
 
 	void OnTriggerExit2D(Collider2D collision)
 	{
-        if (collision.gameObject.tag == "MainCamera" && !dead)
+        if (collision.gameObject.tag == "MainCamera")
             Destroy(gameObject);
 	}
 }

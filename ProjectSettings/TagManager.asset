@@ -8,6 +8,7 @@ TagManager:
   - LvlTag
   - BackButton
   - Music
+  - Asteroid
   layers:
   - Default
   - TransparentFX

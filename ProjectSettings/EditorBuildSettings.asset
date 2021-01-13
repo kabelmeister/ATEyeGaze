@@ -26,4 +26,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MemoryLvl4.unity
     guid: 5a755727a16dd8046b24fad418aa5c2f
+    path: Assets/Scenes/LaserDefense.unity
+    guid: e240f8ca7486878499455b483749dabd
+
   m_configObjects: {}
