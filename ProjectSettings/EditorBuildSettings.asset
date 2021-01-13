@@ -9,6 +9,24 @@ EditorBuildSettings:
     path: Assets/Scenes/Menu.unity
     guid: 2cda990e2423bbf4892e6590ba056729
   - enabled: 1
+    path: Assets/Scenes/MemoryLvl1.unity
+    guid: 2dc14352cacd6ae41b778ca4d600ad01
+  - enabled: 1
     path: Assets/Scenes/LaserDefense.unity
     guid: e240f8ca7486878499455b483749dabd
+  - enabled: 1
+    path: Assets/Scenes/MemoryStartScreen.unity
+    guid: 5d9a7c6800ee7fe4abeda22cde53b08f
+  - enabled: 1
+    path: Assets/Scenes/MemoryLvl2.unity
+    guid: f87b49bd3d02f964c9d8c96659ab53eb
+  - enabled: 1
+    path: Assets/Scenes/MemoryLvl3.unity
+    guid: 080784cbca9646c4b9f557b9210c60d3
+  - enabled: 1
+    path: Assets/Scenes/MemoryLvl4.unity
+    guid: 5a755727a16dd8046b24fad418aa5c2f
+    path: Assets/Scenes/LaserDefense.unity
+    guid: e240f8ca7486878499455b483749dabd
+
   m_configObjects: {}

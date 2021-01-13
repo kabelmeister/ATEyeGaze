@@ -4,6 +4,10 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - PuzzleButton
+  - LvlTag
+  - BackButton
+  - Music
   - Asteroid
   layers:
   - Default
