@@ -26,7 +26,7 @@ public class GameControlMemory : MonoBehaviour
     private int firstGuessIndex, secondGuessIndex, chosenCardIndex = -1;
     private string firstGuessPuzzle, secondGuessPuzzle;
 
-    public GameObject endPanel;
+    //GameObject endScreen = GameObject.Find("EndScreen");
 
     void Awake()
     {
@@ -35,6 +35,7 @@ public class GameControlMemory : MonoBehaviour
 
     void Start()
     {
+        //endScreen.
         GetButtons();
         AddGamePuzzles();
         Shuffle(gamePuzzles);
@@ -176,12 +177,12 @@ public class GameControlMemory : MonoBehaviour
 
         if (cntCorrectGuesses == gameGuesses)
         {
-            Debug.Log("game over " + cntGuesses);
+            //Debug.Log("game over " + cntGuesses);
 
-            GameObject panel = new GameObject("Panel");
-            panel.AddComponent<CanvasRenderer>();
-            Image i = panel.AddComponent<Image>();
-            i.color = Color.red;
+            GameObject endScreen = GameObject.Find("EndScreen");
+            //endScreen.GetComponent<Image>().color = new Color(25, 64, 82, 150);
+            Text endText = GameObject.Find("EndScreenText").GetComponent<Text>();
+            endText.text = "Igra gotova!\nZavršio si igru nakon " + cntGuesses + " pokušaja";
 
             //SceneManager.LoadScene("MemoryStartScreen");
         }
