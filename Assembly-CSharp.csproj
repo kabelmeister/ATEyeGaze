@@ -67,6 +67,7 @@
     <Compile Include="Assets\Scripts\Asteroid.cs" />
     <Compile Include="Assets\Scripts\Configuration.cs" />
     <Compile Include="Assets\Scripts\GameControlLaser.cs" />
+    <Compile Include="Assets\Scripts\MenuControl.cs" />
     <Compile Include="Assets\Scripts\MouseOverUI.cs" />
     <Compile Include="Assets\Scripts\Ship.cs" />
     <Compile Include="Assets\Shapes2D\Scripts\PolyMap.cs" />

@@ -9,6 +9,8 @@ public class GameControlLaser : MonoBehaviour
     public Text scoreText;
     public Text pauseStatusText;
     public Text pauseLabelText;
+    public GameObject exitButton;
+    public SpriteRenderer backgroundSprite;
     public GameObject gameOverScreen;
     public GameObject[] asteroids;
 
@@ -44,10 +46,18 @@ public class GameControlLaser : MonoBehaviour
         playerDied = false;
         timer = 0f;
 
+#if UNITY_EDITOR
+        Configuration.Load();
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+#endif
         Vector2 camSize = new Vector2();
         camSize.y = mainCamera.orthographicSize;
         camSize.x = camSize.y * mainCamera.aspect; 
         Vector2 camPos = mainCamera.transform.position;
+
+        Vector2 bgMoveLimit = (Vector2)backgroundSprite.bounds.extents - camSize;
+        Vector3 bgMove = new Vector3(Random.Range(-bgMoveLimit.x, bgMoveLimit.x), Random.Range(-bgMoveLimit.y, bgMoveLimit.y));
+        backgroundSprite.transform.Translate(bgMove);
 
         cameraVisibility = new Rect(camPos - camSize, camSize + camSize);
         mainCamera.GetComponent<BoxCollider2D>().size = camSize + camSize;
@@ -175,6 +185,21 @@ public class GameControlLaser : MonoBehaviour
         return new Vector2(minAngle, maxAngle);
     }
 
+    GameObject GenerateAsteroid()
+    {
+        Vector2 dir = FromUnitPolar(Random.value * 2f * Mathf.PI);
+        Vector2 start = mainCamera.transform.position;
+        float t = IntersectionRay(start, dir, cameraVisibility);
+        Vector2 newPos = start + dir * (t + 1.5f);
+        Vector2 angles = CalculatePointToRectangleDir(newPos, cameraVisibility);
+
+        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], new Vector3(newPos.x, newPos.y, -1f), Quaternion.identity);
+        Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
+        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.6f, 2.8f), ForceMode2D.Impulse);
+        body.angularVelocity = Random.Range(-150f, 150f);
+        return newAsteroid;
+    }
+
     IEnumerator GameOver()
 	{
         playerDied = true;
@@ -202,31 +227,28 @@ public class GameControlLaser : MonoBehaviour
         if (paused)
 		{
             Time.timeScale = 0f;
-            AudioListener.pause = true;
-            pauseStatusText.enabled = true;
             pauseLabelText.text = "Unpause";
 		}
         else
 		{
             Time.timeScale = 1f;
-            AudioListener.pause = false;
-            pauseStatusText.enabled = false;
             pauseLabelText.text = "Pause";
         }
-	}
+        AudioListener.pause = paused;
+        pauseStatusText.enabled = paused;
+        exitButton.SetActive(paused);
+    }
 
-	GameObject GenerateAsteroid()
+	void OnApplicationQuit()
 	{
-        Vector2 dir = FromUnitPolar(Random.value * 2f * Mathf.PI);
-        Vector2 start = mainCamera.transform.position;
-        float t = IntersectionRay(start, dir, cameraVisibility);
-        Vector2 newPos = start + dir * (t + 1.5f);
-        Vector2 angles = CalculatePointToRectangleDir(newPos, cameraVisibility);
-
-        GameObject newAsteroid = Instantiate(asteroids[Random.Range(0, asteroids.Length)], new Vector3(newPos.x, newPos.y, -1f), Quaternion.identity);
-        Rigidbody2D body = newAsteroid.GetComponent<Rigidbody2D>();
-        body.AddForce(FromUnitPolar(Random.Range(angles.x, angles.y)) * Random.Range(1.6f, 2.8f), ForceMode2D.Impulse);
-        body.angularVelocity = Random.Range(-150f, 150f);
-        return newAsteroid;
+        Configuration.Save();
 	}
+
+#if UNITY_EDITOR
+	void OnDestroy()
+	{
+        Configuration.Save();
+	}
+#endif
+
 }
