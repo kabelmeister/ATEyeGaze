@@ -83,7 +83,7 @@ public class Ship : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D collision)
 	{
         GameObject collidee = collision.gameObject;
-        if (!dead && collidee.tag == "Asteroid")
+        if (!dead && collidee.CompareTag("Asteroid"))
 		{
             dead = true;
             GameObject particles = Instantiate(explodeEffectPrefab, transform.position, Quaternion.identity).gameObject;         

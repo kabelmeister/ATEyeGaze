@@ -64,13 +64,13 @@ public class Asteroid : MonoBehaviour
 
 	void OnTriggerEnter2D(Collider2D collision)
 	{
-		if (collision.gameObject.tag == "MainCamera")
+		if (collision.gameObject.CompareTag("MainCamera"))
             visible = true;
 	}
 
 	void OnTriggerExit2D(Collider2D collision)
 	{
-        if (collision.gameObject.tag == "MainCamera")
+        if (collision.gameObject.CompareTag("MainCamera"))
             Destroy(gameObject);
 	}
 }
