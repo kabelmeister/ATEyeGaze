@@ -7,11 +7,7 @@ using UnityEngine.UI;
 
 public class MemoryStartScreen : MonoBehaviour
 {
-    public const float hoverTime = 1.5f;
-    float hoverTimer = 0.0f;
-
-    Ray ray;
-    RaycastHit2D hit;
+    public float hoverTime = Configuration.MouseHoverTime;
 
     // Start is called before the first frame update
     void Start()
@@ -25,54 +21,26 @@ public class MemoryStartScreen : MonoBehaviour
     {
         GameObject[] objects = GameObject.FindGameObjectsWithTag("LvlTag");
 
-        EventTrigger.Entry eventtype = new EventTrigger.Entry
-        {
-            eventID = EventTriggerType.PointerEnter
-        };
-        eventtype.callback.AddListener((eventData) => { PickALevel(); });
 
         for (int i = 0; i < objects.Length; i++)
         {
             objects[i].GetComponent<Button>();
             objects[i].AddComponent<EventTrigger>();
-            objects[i].GetComponent<EventTrigger>().triggers.Add(eventtype);
         }
     }
 
-    private void PickALevel()
+    public void ReturnToMainMenu()
     {
-        hoverTimer = 0.0f;
-        //isHovering = true;
+        SceneManager.LoadScene("Menu");
     }
 
-    public void LevelChosen(string buttonName)
+    public void GoToLevel(string lvlName)
     {
-        hoverTimer = 0.0f;
-        //isHovering = false;
-
-        
-        if (hit.collider.name == "GoBackButton")
-        {
-            SceneManager.LoadScene("Menu");
-        }
-        else
-        {
-            SceneManager.LoadScene("MemoryLvl" + buttonName[3]);
-        }
-    }
+        SceneManager.LoadScene(lvlName);
+    }    
 
     private void Update()
     {
-        hoverTimer += Time.deltaTime;
-        if (hoverTimer >= hoverTime)// && isHovering)
-        {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
 
-            if (hit)
-            {
-                LevelChosen(hit.collider.name);
-            }
-        }
     }
 }

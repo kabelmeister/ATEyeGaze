@@ -13,6 +13,9 @@ public class MenuControl : MonoBehaviour
 		Configuration.Load();
 		hoverOptionSet = Mathf.RoundToInt(Configuration.MouseHoverTime * 4f) - 1;
 		Application.targetFrameRate = Screen.currentResolution.refreshRate;
+		GameObject tmp = GameObject.FindGameObjectWithTag("Music");
+		if (tmp != null)	
+			tmp.GetComponent<MemoryMusic>().StopMusic();
 	}
 
 	public void MainMenuButton(int buttonId)

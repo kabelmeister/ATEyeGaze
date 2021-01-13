@@ -12,7 +12,7 @@ public class GameControlMemory : MonoBehaviour
     public List<Button> btns = new List<Button>();
 
     //private bool isHovering = false;
-    public const float hoverTime = 1.5f;
+    public float hoverTime = Configuration.MouseHoverTime;
     float hoverTimer = 0.0f;
 
     Ray ray;
@@ -23,8 +23,10 @@ public class GameControlMemory : MonoBehaviour
 
     private bool firstGuess, secondGuess;
     private int cntGuesses, cntCorrectGuesses, gameGuesses;
-    private int firstGuessIndex, secondGuessIndex, chosenCardIndex = -1;
+    private int firstGuessIndex = -1, secondGuessIndex = -1, chosenCardIndex = -1;
     private string firstGuessPuzzle, secondGuessPuzzle;
+
+    private string cardIndex = null;
 
     //GameObject endScreen = GameObject.Find("EndScreen");
 
@@ -118,6 +120,16 @@ public class GameControlMemory : MonoBehaviour
         }
     }
 
+    public void ConfirmChoice()
+    {
+        if (cardIndex != null)
+        {
+            PuzzleChosen(cardIndex);
+            btns[int.Parse(cardIndex)].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+            cardIndex = null;
+        }
+    }
+
     private void Update()
     {
         hoverTimer += Time.deltaTime;
@@ -128,16 +140,24 @@ public class GameControlMemory : MonoBehaviour
             
             if (hit)
             {
-                if (hit.collider.name == "GoBackButton")
+                if (hit.collider.CompareTag("PuzzleButton"))
                 {
-                    SceneManager.LoadScene("MemoryStartScreen");
-                }
-                else
-                {
-                    PuzzleChosen(hit.collider.name);
+
+                    if (cardIndex != hit.collider.name && int.Parse(hit.collider.name) != firstGuessIndex && btns[int.Parse(hit.collider.name)].interactable)
+                    {
+                        if (cardIndex != null)
+                            btns[int.Parse(cardIndex)].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+                        cardIndex = hit.collider.name;
+                        btns[int.Parse(cardIndex)].GetComponent<Image>().color = new Color(1, 1, (float)0.6, 1);
+                    }
                 }
             }
         }
+    }
+
+    public void GoBack()
+    {
+        SceneManager.LoadScene("MemoryStartScreen");
     }
 
     IEnumerator CheckIfPuzzlesMatch()
@@ -169,6 +189,8 @@ public class GameControlMemory : MonoBehaviour
         firstGuess = secondGuess = false;
         chosenCardIndex = -1;
 
+        firstGuessIndex = secondGuessIndex = -1;
+
     }
 
     void CheckIfGameIsFinished()
@@ -182,7 +204,7 @@ public class GameControlMemory : MonoBehaviour
             GameObject endScreen = GameObject.Find("EndScreen");
             //endScreen.GetComponent<Image>().color = new Color(25, 64, 82, 150);
             Text endText = GameObject.Find("EndScreenText").GetComponent<Text>();
-            endText.text = "Igra gotova!\nZavršio si igru nakon " + cntGuesses + " pokušaja";
+            endText.text = "game over!\nYou have completed the game in " + cntGuesses + " moves!";
 
             //SceneManager.LoadScene("MemoryStartScreen");
         }
