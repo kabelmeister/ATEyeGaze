@@ -25,6 +25,7 @@ public class GameControlMemory : MonoBehaviour
     private int cntGuesses, cntCorrectGuesses, gameGuesses;
     private int firstGuessIndex = -1, secondGuessIndex = -1, chosenCardIndex = -1;
     private string firstGuessPuzzle, secondGuessPuzzle;
+    private Collider2D lastHitCollider;
 
     private string cardIndex = null;
 
@@ -33,6 +34,9 @@ public class GameControlMemory : MonoBehaviour
     void Awake()
     {
         puzzles = Resources.LoadAll<Sprite>("foodImages");
+#if UNITY_EDITOR
+        Configuration.Load();
+#endif
     }
 
     void Start()
@@ -132,15 +136,15 @@ public class GameControlMemory : MonoBehaviour
 
     private void Update()
     {
-        hoverTimer += Time.deltaTime;
-        if (hoverTimer >= hoverTime)// && isHovering)
-        {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
-            
-            if (hit)
-            {
-                if (hit.collider.CompareTag("PuzzleButton"))
+        ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        hit = Physics2D.Raycast(ray.origin, ray.direction, 1e3f);
+
+        if (hit.collider == lastHitCollider)
+		{
+            hoverTimer -= Time.deltaTime;
+            if (hoverTimer <= 0f)
+			{
+                if (hit.collider != null && hit.collider.CompareTag("PuzzleButton"))
                 {
 
                     if (cardIndex != hit.collider.name && int.Parse(hit.collider.name) != firstGuessIndex && btns[int.Parse(hit.collider.name)].interactable)
@@ -152,7 +156,34 @@ public class GameControlMemory : MonoBehaviour
                     }
                 }
             }
-        }
+		}
+        else
+		{
+            hoverTimer = Configuration.MouseHoverTime;
+		}
+        lastHitCollider = hit.collider;
+
+        //hoverTimer += Time.deltaTime;
+        //if (hoverTimer >= hoverTime)// && isHovering)
+        //{
+        //    ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        //    hit = Physics2D.Raycast(ray.origin, ray.direction, Mathf.Infinity);
+            
+        //    if (hit)
+        //    {
+        //        if (hit.collider.CompareTag("PuzzleButton"))
+        //        {
+
+        //            if (cardIndex != hit.collider.name && int.Parse(hit.collider.name) != firstGuessIndex && btns[int.Parse(hit.collider.name)].interactable)
+        //            {
+        //                if (cardIndex != null)
+        //                    btns[int.Parse(cardIndex)].GetComponent<Image>().color = new Color(1, 1, 1, 1);
+        //                cardIndex = hit.collider.name;
+        //                btns[int.Parse(cardIndex)].GetComponent<Image>().color = new Color(1, 1, (float)0.6, 1);
+        //            }
+        //        }
+        //    }
+        //}
     }
 
     public void GoBack()
