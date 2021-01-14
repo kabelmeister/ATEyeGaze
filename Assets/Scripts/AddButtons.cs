@@ -27,7 +27,7 @@ public class AddButtons : MonoBehaviour
         }
         else if (sceneName[sceneName.Length - 1] == '3')
         {
-            btn_cnt = 25;
+            btn_cnt = 24;
             btn.GetComponent<BoxCollider2D>().size = new Vector2(150, 150);
         }
         else if (sceneName[sceneName.Length - 1] == '4')
