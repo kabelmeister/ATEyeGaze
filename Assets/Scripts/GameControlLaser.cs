@@ -11,12 +11,16 @@ public class GameControlLaser : MonoBehaviour
     public Text pauseLabelText;
     public GameObject exitButton;
     public SpriteRenderer backgroundSprite;
+    public GameObject skybox;
     public GameObject gameOverScreen;
     public GameObject[] asteroids;
 
+    public float skyboxRotationSpeed = 1.0f;
+
+    Vector3 skyboxRotationAxis;
+    Rect cameraVisibility;
     int score = 0;
     float timer;
-    Rect cameraVisibility;
     bool paused;
     bool playerDied;
 
@@ -55,9 +59,17 @@ public class GameControlLaser : MonoBehaviour
         camSize.x = camSize.y * mainCamera.aspect; 
         Vector2 camPos = mainCamera.transform.position;
 
-        Vector2 bgMoveLimit = (Vector2)backgroundSprite.bounds.extents - camSize;
-        Vector3 bgMove = new Vector3(Random.Range(-bgMoveLimit.x, bgMoveLimit.x), Random.Range(-bgMoveLimit.y, bgMoveLimit.y));
-        backgroundSprite.transform.Translate(bgMove);
+        if (backgroundSprite.gameObject.activeSelf)
+		{
+            Vector2 bgMoveLimit = (Vector2)backgroundSprite.bounds.extents - camSize;
+            Vector3 bgMove = new Vector3(Random.Range(-bgMoveLimit.x, bgMoveLimit.x), Random.Range(-bgMoveLimit.y, bgMoveLimit.y));
+            backgroundSprite.transform.Translate(bgMove);
+		}
+        if (skybox.activeSelf)
+		{
+            skybox.transform.rotation = Random.rotationUniform;
+            skyboxRotationAxis = Random.onUnitSphere;
+		}
 
         cameraVisibility = new Rect(camPos - camSize, camSize + camSize);
         mainCamera.GetComponent<BoxCollider2D>().size = camSize + camSize;
@@ -72,6 +84,10 @@ public class GameControlLaser : MonoBehaviour
             timer = GenerateSpawnTime();
             GenerateAsteroid();
         }
+        if (skybox.activeSelf)
+		{
+            skybox.transform.Rotate(skyboxRotationAxis, skyboxRotationSpeed * Time.deltaTime);
+		}
 	}
 
     float GenerateSpawnTime()
